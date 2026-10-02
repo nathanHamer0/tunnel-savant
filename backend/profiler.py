@@ -27,6 +27,22 @@ def load_pitch_data(player_name=""):
         pitches = pitches[pitches['player_name'] == player_name]
     return pitches
 
+def get_team(pitches):
+    """Returns team of player by deciphering it from the combination of the home_team, away_team, and inning_topbot entries from their most-recent 
+    pitch in their pitch data.
+
+    Args:
+        pitches (DataFrame): player's pitch data, containing home_team, away_team, and inning_topbot entries.
+
+    Returns:
+        str: player's team.
+    """
+    most_recent_pitch = pitches.iloc[0]     # df's are inherently sorted (descending) by game_date
+    if most_recent_pitch['inning_topbot'] == "Top":
+        return most_recent_pitch['home_team']
+    elif most_recent_pitch['inning_topbot'] == "Bot":
+        return most_recent_pitch['away_team']
+
 def get_durability(pitches):
     """Returns durability of player given their pitch data.
 
@@ -290,6 +306,7 @@ def profile_player(player_name):
     """
     pitches = load_pitch_data(player_name)
     profile = {}
+    profile['team'] = get_team(pitches)
     profile['durability'] = get_durability(pitches)   
     profile['handedness'] = get_handedness(pitches)
     profile['arm_angle'] = get_arm_angle(pitches)

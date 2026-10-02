@@ -5,7 +5,10 @@ import pandas
 
 row1 = {
     "game_pk": 100000,
+    "home_team": "TOR",
+    "away_team": "BAL",
     "player_name": "Gausman, Kevin",
+    "inning_topbot": "Top",
     "p_throws": "R",
     "arm_angle": 35.3,
     "pitch_type": "SL",
@@ -38,7 +41,10 @@ row1 = {
 }
 row2 = {
     "game_pk": 100000,
+    "home_team": "BAL",
+    "away_team": "TOR",
     "player_name": "Gausman, Kevin",
+    "inning_topbot": "Bot",
     "p_throws": "R",
     "arm_angle": 37.3,
     "pitch_type": "FS",
@@ -71,7 +77,10 @@ row2 = {
 }
 row3 = {
     "game_pk": 100000,
+    "home_team": "BAL",
+    "away_team": "TOR",
     "player_name": "Gausman, Kevin",
+    "inning_topbot": "Bot",
     "p_throws": "R",
     "arm_angle": 37.5,
     "pitch_type": "FS",
@@ -104,7 +113,10 @@ row3 = {
 }
 row4 = {
     "game_pk": 100000,
+    "home_team": "TOR",
+    "away_team": "BAL",
     "player_name": "Gausman, Kevin",
+    "inning_topbot": "Top",
     "p_throws": "R",
     "arm_angle": 39.0,
     "pitch_type": "FF",
@@ -137,7 +149,10 @@ row4 = {
 }
 row5 = {
     "game_pk": 100000,
+    "home_team": "BAL",
+    "away_team": "TOR",
     "player_name": "Gausman, Kevin",
+    "inning_topbot": "Bot",
     "p_throws": "R",
     "arm_angle": 37.1,
     "pitch_type": "FF",
@@ -170,7 +185,10 @@ row5 = {
 }
 row6 = {
     "game_pk": 100000,
+    "home_team": "TOR",
+    "away_team": "BAL",
     "player_name": "Gausman, Kevin",
+    "inning_topbot": "Top",
     "p_throws": "R",
     "arm_angle": 31.1,
     "pitch_type": "FS",
@@ -203,7 +221,10 @@ row6 = {
 }
 row7 = {
     "game_pk": 200000,
+    "home_team": "BAL",
+    "away_team": "TOR",
     "player_name": "Gausman, Kevin",
+    "inning_topbot": "Bot",
     "p_throws": "R",
     "arm_angle": 37.1,
     "pitch_type": "FF",
@@ -245,7 +266,7 @@ def test_load_pitch_data():
     
     # Call and verify
     res = profiler.load_pitch_data()
-    assert res['game_pk'].iloc[0] == 824815
+    assert res['game_pk'].iloc[0] == 825095
     
 def test_load_pitch_data_valid():
     """Test data loader with valid input."""
@@ -254,6 +275,14 @@ def test_load_pitch_data_valid():
     res = profiler.load_pitch_data("Gausman, Kevin")
     assert res['player_name'].iloc[0] == "Gausman, Kevin"
     
+def test_get_team_valid():
+    
+    """Test team decipherer with valid input."""
+    
+    # Call and verify
+    res = profiler.get_team(INPUT_DF)
+    assert res == "TOR"
+
 def test_get_durability_valid():
     
     """Test durability extractor with valid input."""
@@ -288,7 +317,7 @@ def test_get_stuff_valid(mocker):
     
     # Stub dependencies
     mocker.patch(
-        "backend.profiler.profiler.get_arsenal",
+        "backend.profiler.get_arsenal",
         return_value={'SL': 0.103, 'FS': 0.380, 'FF': 0.516}
     )
     
@@ -311,7 +340,7 @@ def test_get_locations_valid(mocker):
     """Test locations extractor with valid input."""
     # Stub dependencies
     mocker.patch(
-        "backend.profiler.profiler.get_arsenal",
+        "backend.profiler.get_arsenal",
         return_value={'SL': 0.103, 'FS': 0.380, 'FF': 0.516}
     )
     
@@ -370,7 +399,7 @@ def test_find_tunnels_valid(mocker):
     
     # Stub dependencies
     mocker.patch(
-        "backend.profiler.profiler.get_arsenal",
+        "backend.profiler.get_arsenal",
         return_value={'SL': 0.103, 'FS': 0.380, 'FF': 0.516}
     )
     # TODO: stub calc_tunnel and pair_tunnels as well
@@ -419,7 +448,7 @@ def test_get_all_player_names(mocker):
     
     # Stub dependencies
     mocker.patch(
-        "backend.profiler.profiler.load_pitch_data",
+        "backend.profiler.load_pitch_data",
         return_value=INPUT_DF
     )
     

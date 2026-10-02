@@ -1,3 +1,12 @@
-python -m pytest
-python -m scribbles.export_tunnel_data
-python -m backend.processer.processer
+CSV Parsing
+    python backend/parse_data.py
+
+In-Dev Testing
+    python -m pytest
+    python -m trash.export_tunnel_data 
+
+Run react env
+    npm run dev
+
+Run app
+    python backend/app.py   # listens on http://localhost:5000

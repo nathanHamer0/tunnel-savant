@@ -1,0 +1,17 @@
+.search.container {
+  position: fixed; /* anchors to <html> */
+  inset: 0; /* shorthand for top:0; right:0; bottom:0; left:0; mechanically forces element to stretch to fill parent size*/
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+}
+
+.search.bar {
+  aspect-ratio: 23 / 1;
+}
+
+.search.bar#home {
+  width: 75%;
+}

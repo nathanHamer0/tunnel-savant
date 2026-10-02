@@ -1,70 +1,16 @@
-# Deployment Savant
+# React + Vite
 
-A baseball pitcher deployment analyzer inspired by Baseball Savant and mlbpitchprofiler.com.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Functionality
+Currently, two official plugins are available:
 
-Deployment Savant evaluates a pitcher's deployment tendencies using:
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-- Pitch-tunneling frequencies (ABtunnel%)
-- Pitch-location frequencies (Azone%)
-- Other characteristics (e.g., arm-angle)
+## React Compiler
 
-It outputs:
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-- Normalized (percentalized) deployment tendencies
+## Expanding the ESLint configuration
 
-## Motivation
-
-I wanted to build a web-application to view percentalized pitcher profiles (à la Baseball Savant, mlbpitchprofiler.com), but in terms of deployment-metrics (i.e., the "how") rather than performance-metrics (i.e., the "what").
-
-## Tech stack
-
-### Languages
-
-- CSS
-- JavaScript (JSX)
-- Python
-- SQL
-
-### Frameworks
-
-- pytest
-  - unittest.mock
-
-### Python Libraries
-
-- pandas
-
-## Challenges
-
-- SQL and JSX learning curves
-
-## Live demo
-
-- coming soon...
-
-**Notes:**
-
-- This project is currently in-development (pre-deployment)
-
-## Project Structure
-
-backend/
-├── source_data.py
-├── parse_data.py
-├── profiler.py
-├── processer.py
-├── comparer.py
-├── static/
-├──── ...
-├── data/
-├──── parse_data.sql
-├──── ...
-├── tests/
-├──── ...
-...
-
-## Future improvements
-
-- Build machine learning model to model pitcher deployment similarity
+If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
