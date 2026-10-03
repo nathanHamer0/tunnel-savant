@@ -7,6 +7,7 @@ import Profile from "./Profile.jsx";
 function App() {
   const [state, setState] = useState(0);
   const [searchString, setSearchString] = useState("");
+  const [searchFound, setSearchFound] = useState(true);
 
   return (
     <>
@@ -15,12 +16,15 @@ function App() {
         setState={setState}
         searchString={searchString}
         setSearchString={setSearchString}
+        searchFound={searchFound}
       />
       <Profile
         state={state}
         setState={setState}
         searchString={searchString}
         setSearchString={setSearchString}
+        searchFound={searchFound}
+        setSearchFound={setSearchFound}
       />
     </>
   );

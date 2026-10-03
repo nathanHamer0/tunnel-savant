@@ -69,22 +69,17 @@ const LOGOS = {
  * Translates searched name (in standard format) to the CSV naming format and returns the result.
  *
  * @param {String} standardName - Full name in standard form "first_name last_name".
+ * @param {Function} setState - Setter function used to mediate appplication-wide component visibility.
  * @returns {String} Full name in capitalized CSV form "last_name, first_name".
+ * @param {Function} setSearchFound - Setter function used mediate SearchNotFound component (i.e., an error message) visibility.
  */
-function standardToCsvNaming(standardName) {
-  // On initial app render
-  if (!standardName.includes("Enter")) {
+function standardToCsvNaming(standardName, setState, setSearchFound) {
+  if (!(standardName.includes("Enter") && standardName.includes(" "))) {
     return;
   }
-  standardName = standardName.slice(0, -1 * "Enter".length);
 
-  if (!standardName.includes(" ")) {
-    try {
-      throw new Error("InvalidInputException");
-    } catch (error) {
-      console.log(error.message);
-    }
-  }
+  // Trim "Enter" key
+  standardName = standardName.slice(0, -1 * "Enter".length);
 
   // Traverse to space delimiter
   let ch = 0;
@@ -104,18 +99,44 @@ function standardToCsvNaming(standardName) {
  * Generates HTML for a newly-apiData-specified Profile component and calls for its (re)rendering.
  *
  * @param {Object} data - Profile-specifying apiData.
+ * @param {Function} setHtml - Setter function used to (re)set content of Profile HTML.
+ * @param {Function} onBackButton - Sequence of (re)render actions to be carried out upon a click of a Profile component's back-button.
+ * @param {Function} setState - Setter function used to mediate appplication-wide component visibility.
+ * @param {Function} setSearchFound - Setter function used mediate SearchNotFound component (i.e., an error message) visibility.
+ * @param {Function} setSearchString - Setter function used to build (or reset) the accumulating search string.
  */
-function genProfile(data, setHtml, onBackButton) {
-  // On initial app render
+function genProfile(
+  data,
+  setHtml,
+  onBackButton,
+  setState,
+  setSearchFound,
+  setSearchString
+) {
+  // Upon initial app render
   if (!data) {
     return;
   }
 
-  const player_name = data["player-name"];
-  const team_name = data["team-name"];
-  const atp_data = data["aggregate-tunnel-pairs"];
-  const tp_data = data["tunnel-pairs"];
-  // TODO: funnel data to cards appropriately
+  // Relay verdict on success of API database search
+  if (data == "PlayerNotFound") {
+    try {
+      throw new Error("InvalidInputException");
+    } catch (error) {
+      console.log(error.message);
+      setSearchFound(false);
+      setState(0);
+      setSearchString("");
+      return;
+    }
+  }
+  setSearchFound(true);
+
+  // Express fetched API data in HTML
+  const playerName = data["player-name"];
+  const teamName = data["team-name"];
+  const aggregateTunnelPairData = data["aggregate-tunnel-pairs"];
+  const TunnelPairData = data["tunnel-pairs"];
   setHtml(
     <>
       <div className="profile viewport">
@@ -124,16 +145,36 @@ function genProfile(data, setHtml, onBackButton) {
             Back to Search
           </button>
           <h2 className="profile title">
-            {player_name} | {team_name}
+            {playerName} | {teamName}
           </h2>
         </section>
         <section className="profile bottom">
-          <img src={LOGOS[team_name]}></img>
-          <Card tunnelClass={"A"} />
-          <Card tunnelClass={"F-F"} />
-          <Card tunnelClass={"F-B"} />
-          <Card tunnelClass={"F-O"} />
-          <Card tunnelClass={"B-O"} />
+          <img src={LOGOS[teamName]}></img>
+          <Card
+            tunnelClass={"A"}
+            aggregateTunnelPairData={aggregateTunnelPairData}
+            TunnelPairData={TunnelPairData}
+          />
+          <Card
+            tunnelClass={"F-F"}
+            aggregateTunnelPairData={aggregateTunnelPairData}
+            TunnelPairData={TunnelPairData}
+          />
+          <Card
+            tunnelClass={"F-B"}
+            aggregateTunnelPairData={aggregateTunnelPairData}
+            TunnelPairData={TunnelPairData}
+          />
+          <Card
+            tunnelClass={"F-O"}
+            aggregateTunnelPairData={aggregateTunnelPairData}
+            TunnelPairData={TunnelPairData}
+          />
+          <Card
+            tunnelClass={"B-O"}
+            aggregateTunnelPairData={aggregateTunnelPairData}
+            TunnelPairData={TunnelPairData}
+          />
         </section>
       </div>
     </>
@@ -146,23 +187,33 @@ function genProfile(data, setHtml, onBackButton) {
  *
  * @param {String} searchString - Profile-specifying apiData.
  * @param {Function} regenHtml - Harnesses and feeds fetched apiData to the Profile HTML generator genProfile().
+ * @param {Function} setState - Setter function used to mediate appplication-wide component visibility.
+ * @param {Function} setSearchFound - Setter function used mediate SearchNotFound component (i.e., an error message) visibility.
  */
-function regen(searchString, regenHtml) {
-  // On initial app render
+function regen(searchString, regenHtml, setState, setSearchFound) {
+  // Upon initial app render
   if (!searchString) {
     return;
   }
 
   fetch(
     "http://localhost:5001/api/player/" +
-      encodeURIComponent(standardToCsvNaming(searchString)) +
+      encodeURIComponent(
+        standardToCsvNaming(searchString, setState, setSearchFound)
+      ) +
       "/data" // http://localhost:5001/api/player/Gausman%2C%20Kevin/data
   )
     .then((res) => res.json()) // res.json() parses response body as JSON
     .then((data) => regenHtml(data)); // Retrieves the JSON data
 }
 
-function Profile({ state, setState, searchString, setSearchString }) {
+function Profile({
+  state,
+  setState,
+  searchString,
+  setSearchString,
+  setSearchFound,
+}) {
   // setHtml() lets Profile know that its time to re-render as new HTML has been generated (for a new profile)
   const [html, setHtml] = useState(null);
 
@@ -170,12 +221,24 @@ function Profile({ state, setState, searchString, setSearchString }) {
     setSearchString("");
     setState(0);
   };
-  const fetchThenRegen = regen(searchString, (apiData) =>
-    genProfile(apiData, setHtml, onBackButton)
-  );
+  const fetchThenRegen = () =>
+    regen(
+      searchString,
+      (apiData) =>
+        genProfile(
+          apiData,
+          setHtml,
+          onBackButton,
+          setState,
+          setSearchFound,
+          setSearchString
+        ),
+      setState,
+      setSearchFound
+    );
 
-  // When the state has changed, presumably, a search has been made, and so, its time to fetch the searched-for data (via regen()) and generate the new profile (via genProfile()) w/ fetchThenRegen()
-  useEffect(() => fetchThenRegen, [state]);
+  // When the state has changed to 1, presumably, a search has been made, and so, its time to fetch the searched-for data (via regen()) and generate the new profile (via genProfile()) w/ fetchThenRegen()
+  useEffect(() => (state == 1 ? fetchThenRegen() : undefined), [state]);
   return state == 1 && html;
 }
 
@@ -185,10 +248,10 @@ export default Profile;
 // LEARNINGS
 /////////////
 
-// ~Line137
+// ~Line204
+///////////
+// Function must be given as a reference, not a call; hence, why the function is given as a call within a reference to an arrow-function. As calling the function directly gives the function's return, not the function itself. To give the function itself you must embed (i.e., call) the function within a reference to an arrow function (i.e., a plain function value).
+
+// ~Line205
 ///////////
 // regen(searchString, regenHtml) requires regenHtml argument to be an arrow-function so that it can harness api-fetch by taking it as an argument.
-
-// ~Line142
-///////////
-// Effect-function must be given as a reference, not a call; hence, why the effect-function is given as a variable. As calling the function directly gives the function's return as the argument, not the argument specified for (i.e., the function itself). To give the effect-function itself you must refer to the function as a plain function variable/value (e.g., as arrow function).

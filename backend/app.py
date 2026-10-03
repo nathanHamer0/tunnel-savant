@@ -7,7 +7,7 @@ PROFILES_PATH = "backend/profiles.pkl"
 app = Flask(__name__)
 CORS(app)  # allows requests from React dev server (different port = different origin)
  
-# --- Bulk load & process at startup (AI-GEN) --- 
+# --- Bulk load & process at startup --- 
  
 with open(PROFILES_PATH, "rb") as f:
     profiles = pickle.load(f)
@@ -16,9 +16,13 @@ atp_pack = AggregateTunnelPairsPack(profiles)
 atp_pack.percentalize()
 tp_pack = TunnelPairsPack(profiles)
 tp_pack.percentalize()
+
+def player_exists(player_name):
+    """Returns boolean of whether the given player exists in the database."""
+    return player_name in profiles
  
 def find_player_value(data, player_name):
-    """Scans parameter-specified pack for given player and returns the value."""
+    """Scans parameter-specified pack for given player and returns the value. [AI-GEN]"""
     for name, value in data:
         if name == player_name:
             return value
@@ -28,7 +32,7 @@ def get_team(player_name):
     return profiles[player_name]["team"]
 
 def get_aggregate_tunnel_pairs(player_name):
-    """Returns 1D aggregate tunnel pair pack for specified player."""
+    """Returns 1D aggregate tunnel pair pack for specified player. [AI-GEN]"""
     result = {}
     for atp_key in atp_pack.data:
         value = find_player_value(atp_pack.get_data(atp_key), player_name)
@@ -36,7 +40,7 @@ def get_aggregate_tunnel_pairs(player_name):
     return result
 
 def get_tunnel_pairs(player_name):
-    """Returns 2D tunnel pair pack for specified player."""
+    """Returns 2D tunnel pair pack for specified player. [AI-GEN]"""
     result = {}
     for pt_a in tp_pack.data:
         row = {}
@@ -49,7 +53,9 @@ def get_tunnel_pairs(player_name):
 @app.route("/api/player/<player_name>/data")
 def get_all_data(player_name):
     """Returns dictionary of all tunnel pair packs for specified player, along with miscellanious data (e.g., team)."""
-    return jsonify({"player-name": player_name, "team-name": get_team(player_name), "aggregate-tunnel-pairs": get_aggregate_tunnel_pairs(player_name), "tunnel-pairs": get_tunnel_pairs(player_name)})
+    if player_exists(player_name):
+        return jsonify({"player-name": player_name, "team-name": get_team(player_name), "aggregate-tunnel-pairs": get_aggregate_tunnel_pairs(player_name), "tunnel-pairs": get_tunnel_pairs(player_name)})
+    return jsonify("PlayerNotFound")
  
 if __name__ == "__main__":
     app.run(debug=True, port=5001)
