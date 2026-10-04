@@ -4,10 +4,10 @@ A baseball pitcher deployment analyzer inspired by Baseball Savant and mlbpitchp
 
 ## Functionality
 
-Deployment Savant evaluates a pitcher's deployment tendencies using:
+Deployment (Tunnel) Savant evaluates a pitcher's deployment tendencies using:
 
 - Pitch-tunneling frequencies (ABtunnel%)
-- Pitch-location frequencies (Azone%)
+- Pitch-location frequencies (Azone%) [COMING-SOON]
 - Other characteristics (e.g., arm-angle)
 
 It outputs:
@@ -67,4 +67,4 @@ backend/
 
 ## Future improvements
 
-- Build machine learning model to model pitcher deployment similarity
+- Build machine learning model to model pitcher deployment (tunnel) similarity
