@@ -255,7 +255,7 @@ def find_tunnels(pitches):
         for pt_b in arsenal:
             symmetrize_tunnel_pair(tunnel_pairs, pt_a, pt_b)
                
-    # Find frequencies (tunnel-rate) of counted tunneling pairs (where tunnel-rate is tunnel pairings per total pitches)
+    # Find frequencies (tunnel-rate) of counted tunneling pairs (where tunnel-rate is tunnel pairings per total pitches) [FIXME: frequency logic is flawed]
     p_tot = pitches['total_pitches'].iloc[0]
     for pt_a in arsenal:
         for pt_b in arsenal:

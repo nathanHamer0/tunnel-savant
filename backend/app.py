@@ -3,7 +3,7 @@ from flask import Flask, jsonify
 from flask_cors import CORS
  
 from pack import TunnelPairsPack, AggregateTunnelPairsPack
-PROFILES_PATH = "backend/profiles.pkl"
+PROFILES_PATH = "backend/profiles2.pkl"
 app = Flask(__name__)
 CORS(app)  # allows requests from React dev server (different port = different origin)
  
@@ -22,10 +22,10 @@ def player_exists(player_name):
     return player_name in profiles
  
 def find_player_value(data, player_name):
-    """Scans parameter-specified pack for given player and returns the value. [AI-GEN]"""
-    for name, value in data:
+    """Scans parameter-specified pack for given player and returns the percentile and frequency values within a tuple. [AI-GEN]"""
+    for name, percentile, frequency in data:
         if name == player_name:
-            return value
+            return (percentile, frequency)
 
 def get_team(player_name):
     """Returns team of specified player."""

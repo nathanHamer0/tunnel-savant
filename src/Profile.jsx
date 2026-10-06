@@ -136,7 +136,7 @@ function genProfile(
   const playerName = data["player-name"];
   const teamName = data["team-name"];
   const aggregateTunnelPairData = data["aggregate-tunnel-pairs"];
-  const TunnelPairData = data["tunnel-pairs"];
+  const tunnelPairData = data["tunnel-pairs"];
   setHtml(
     <>
       <div className="profile viewport">
@@ -153,27 +153,27 @@ function genProfile(
           <Card
             tunnelClass={"A"}
             aggregateTunnelPairData={aggregateTunnelPairData}
-            TunnelPairData={TunnelPairData}
+            tunnelPairData={tunnelPairData}
           />
           <Card
             tunnelClass={"F-F"}
             aggregateTunnelPairData={aggregateTunnelPairData}
-            TunnelPairData={TunnelPairData}
+            tunnelPairData={tunnelPairData}
           />
           <Card
             tunnelClass={"F-B"}
             aggregateTunnelPairData={aggregateTunnelPairData}
-            TunnelPairData={TunnelPairData}
+            tunnelPairData={tunnelPairData}
           />
           <Card
             tunnelClass={"F-O"}
             aggregateTunnelPairData={aggregateTunnelPairData}
-            TunnelPairData={TunnelPairData}
+            tunnelPairData={tunnelPairData}
           />
           <Card
             tunnelClass={"B-O"}
             aggregateTunnelPairData={aggregateTunnelPairData}
-            TunnelPairData={TunnelPairData}
+            tunnelPairData={tunnelPairData}
           />
         </section>
       </div>
