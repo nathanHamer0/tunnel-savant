@@ -42,7 +42,7 @@ I wanted to build a web-application to view percentalized pitcher profiles (à l
 
 ## Live demo
 
-- https://tunnel-savant.onrender.com
+- https://tunnel-savant-web.onrender.com/
 
 ## Project Structure
 
