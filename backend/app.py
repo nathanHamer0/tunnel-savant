@@ -3,7 +3,7 @@ from flask import Flask, jsonify
 from flask_cors import CORS
  
 from pack import TunnelPairsPack, AggregateTunnelPairsPack
-PROFILES_PATH = "backend/profiles2.pkl"
+PROFILES_PATH = "backend/profiles.pkl"
 app = Flask(__name__)
 CORS(app)  # allows requests from React dev server (different port = different origin)
  

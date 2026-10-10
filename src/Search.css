@@ -1,17 +1,37 @@
-.search.container {
+.search.viewport.container {
   position: fixed; /* anchors to <html> */
   inset: 0; /* shorthand for top:0; right:0; bottom:0; left:0; mechanically forces element to stretch to fill parent size*/
   display: flex;
   flex-direction: column;
-  justify-content: center;
+}
+
+.search.bottom.container#parent {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.search.bottom.container#child {
+  display: flex;
+  flex-direction: column;
+}
+
+.search.bottom.container#grandchild {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 50px;
+  gap: 20px;
+  flex-grow: 1;
 }
 
-.search.bar {
-  aspect-ratio: 23 / 1;
+.search.bottom.left.image {
+  height: 200px;
+  width: 75%;
 }
 
-.search.bar#home {
+.search.bottom.right.bar {
+  aspect-ratio: 15 / 1;
+}
+
+.search.bottom.right.bar#home {
   width: 75%;
 }

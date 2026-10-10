@@ -329,7 +329,7 @@ class AggregateTunnelPairsPack(Pack):
             super().scale(n, atp)
 
 def main():
-    with open("profiles2.pkl", "rb") as f:
+    with open("profiles.pkl", "rb") as f:
         profiles = pickle.load(f)
         
     tp_pack = TunnelPairsPack(profiles)

@@ -70,8 +70,8 @@ const LOGOS = {
  *
  * @param {String} standardName - Full name in standard form "first_name last_name".
  * @param {Function} setState - Setter function used to mediate appplication-wide component visibility.
- * @returns {String} Full name in capitalized CSV form "last_name, first_name".
  * @param {Function} setSearchFound - Setter function used mediate SearchNotFound component (i.e., an error message) visibility.
+ * @returns {String} Full name in capitalized CSV form "last_name, first_name".
  */
 function standardToCsvNaming(standardName, setState, setSearchFound) {
   if (!(standardName.includes("Enter") && standardName.includes(" "))) {

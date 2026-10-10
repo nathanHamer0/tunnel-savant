@@ -2,6 +2,6 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 100%;
-  border: solid 1px rgba(255, 255, 255, 0.5);
+  aspect-ratio: 1/1;
+  border: solid 3px rgb(50, 50, 50);
 }

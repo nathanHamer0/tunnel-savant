@@ -11,24 +11,38 @@ const tunnelClassTitles = {
 };
 const tunnelClassIdx = {
   A: ["F-F", "F-B", "F-O", "B-O"],
-  "F-F": ["FF", "SI", "FC"],
-  "F-B": ["FF", "SI", "FC", "CU", "KC", "CS", "SL", "ST", "SV", "SC"],
-  "F-O": ["FF", "SI", "FC", "CH", "FS", "FO"],
-  "B-O": ["CU", "KC", "CS", "SL", "ST", "SV", "SC", "CH", "FS", "FO"],
+  "F-F": [
+    ["FF", "SI", "FC"],
+    ["FF", "SI", "FC"],
+  ],
+  "F-B": [
+    ["FF", "SI", "FC"],
+    ["CU", "KC", "CS", "SL", "ST", "SV", "SC"],
+  ],
+  "F-O": [
+    ["FF", "SI", "FC"],
+    ["CH", "FS", "FO"],
+  ],
+  "B-O": [
+    ["CU", "KC", "CS", "SL", "ST", "SV", "SC"],
+    ["CH", "FS", "FO"],
+  ],
 };
 
 /**
  * Creates sliders visualizing tunnel-pair data for tunnel-pairs of the targeted pitch types.
  *
- * @param {Array[String]} pitchTypes - Targeted pitch types.
+ * @param {Array[Array[String]]} pitchTypes - Two arrays, one for each targeted pitch type.
  * @param {Object[Object[Array[Number]]]} tunnelPairData - Tunnel-keyed (2D-pitch-type-keyed) jsonify'd python dictionary containing percentile-frequency 2-arrays.
  */
 function createSliders(pitchTypes, tunnelPairData) {
   let tpScores = [];
-  for (let idx in pitchTypes) {
-    const ptA = pitchTypes[idx];
-    for (let jdx in pitchTypes) {
-      const ptB = pitchTypes[jdx];
+  const pitchTypesA = pitchTypes[0];
+  const pitchTypesB = pitchTypes[1];
+  for (let idx in pitchTypesA) {
+    const ptA = pitchTypesA[idx];
+    for (let jdx in pitchTypesB) {
+      const ptB = pitchTypesB[jdx];
       const reverseTunnelPair = String(ptB) + "-" + String(ptA);
       if (
         tunnelPairData[ptA][ptB][0] != 0 &&
@@ -41,7 +55,12 @@ function createSliders(pitchTypes, tunnelPairData) {
     }
   }
   return tpScores.map(([tunnelPair, perc, freq]) => (
-    <Slider tunnelPair={tunnelPair} percentile={perc} frequency={freq} />
+    <Slider
+      key={tunnelPair}
+      tunnelPair={tunnelPair}
+      percentile={perc}
+      frequency={freq}
+    />
   ));
 }
 
@@ -61,7 +80,12 @@ function Card({ tunnelClass, aggregateTunnelPairData, tunnelPairData }) {
       atpScores = atpScores.concat(atpScorePack);
     }
     sliders = atpScores.map(([tunnelSubclass, perc, freq]) => (
-      <Slider tunnelPair={tunnelSubclass} percentile={perc} frequency={freq} />
+      <Slider
+        key={tunnelSubclass}
+        tunnelPair={tunnelSubclass}
+        percentile={perc}
+        frequency={freq}
+      />
     ));
     // Tunnel-class card (standard case)
   } else {

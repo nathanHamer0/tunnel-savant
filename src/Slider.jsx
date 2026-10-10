@@ -1,28 +1,38 @@
 import { useEffect, useState } from "react";
 import "./Slider.css";
 
+/**
+ * Calculates this indicator's dispalcement along this Slider's bar based on the given percentile score for this Slider's statistic.
+ *
+ * @param {Number} percentile - floating point within the range 0 to 100.
+ * @returns {String} HTML string conveying relative dispalcement.
+ */
 function calcIndicatorDisplacement(percentile) {
   return String(100 * percentile) + "%";
 }
 
+/**
+ * Calculates this indicator's background color based on the given percentile score for this Slider's statistic.
+ *
+ * @param {Number} percentile - floating point within the range 0 to 100.
+ * @returns {String} HTML string conveying color.
+ */
 function calcIndicatorBackgroundColor(percentile) {
-  if (percentile == 0.5) {
-    return "rgb(255, 255, 255)";
-  } else if (percentile < 0.5) {
-    const rg = 255 * (2 * percentile);
-    return "rgb(" + String(rg) + ", " + String(rg) + ", 255)";
-  }
-  const bg = 255 * (2 * percentile);
-  return "rgb(255, " + String(bg) + ", " + String(bg) + ")";
-}
+  let color = "rgb(255, 255, 255)";
 
-function calcIndicatorBorderColor(percentile) {
-  if (percentile == 0.5) {
-    return "rgb(255, 255, 255)";
+  // Color higher scores red
+  if (percentile > 0.5) {
+    // Dull purity proportionally to score (up non-reds)
+    const bg = 255 * (1 - 2 * (percentile - 0.5)); // -0.5 to shift score (0.5,1] leftwards to origin (0,0.5]; 2* to scale score (0,0.5] up to 100% scale (0,1]; 1- to take inverse so higher (extreme/purest) scores are dulled the least
+    color = "rgb(255, " + String(bg) + ", " + String(bg) + ")";
+
+    // Color lower scores blue
   } else if (percentile < 0.5) {
-    return "rgb(173, 230, 230)";
+    // Dull purity proportionally to score (up non-blues)
+    const rg = 255 * (2 * percentile); // 2* to scale score [0,0.5) up to 100% scale [0,1); lower (extreme/purest) scores are dulled the least
+    color = "rgb(" + String(rg) + ", " + String(rg) + ", 255)";
   }
-  return "rgb(230, 173, 173)";
+  return color;
 }
 
 function Slider({ tunnelPair, percentile, frequency }) {
@@ -41,18 +51,19 @@ function Slider({ tunnelPair, percentile, frequency }) {
             style={{
               left: calcIndicatorDisplacement(percentile),
               transform:
-                "translateX(" + calcIndicatorDisplacement(percentile) + ")",
+                "translate(-" +
+                calcIndicatorDisplacement(percentile) +
+                ", -50%)",
               backgroundColor: calcIndicatorBackgroundColor(percentile),
-              borderColor: calcIndicatorBorderColor(percentile),
             }}
           >
             <span className="slider score" id="percentile">
-              {percentile}
+              {(100 * percentile).toFixed(0)}
             </span>
           </div>
         </div>
         <span className="Slider score" id="frequency">
-          {frequency}
+          {frequency.toFixed(2)}
         </span>
       </div>
     </>
