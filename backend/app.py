@@ -1,11 +1,16 @@
+
+# --- Deployment configuration --- [AI-GEN]
+
 import pickle
 from flask import Flask, jsonify
 from flask_cors import CORS
- 
-from pack import TunnelPairsPack, AggregateTunnelPairsPack
-PROFILES_PATH = "backend/profiles.pkl"
+import os
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+PROFILES_PATH = os.path.join(BASE_DIR, "profiles.pkl")
+
 app = Flask(__name__)
-CORS(app)  # allows requests from React dev server (different port = different origin)
+CORS(app, origins=os.environ.get("FRONTEND_ORIGIN", "*"))
  
 # --- Bulk load & process at startup --- 
  

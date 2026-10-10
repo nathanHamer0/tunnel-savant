@@ -25,7 +25,6 @@ dist-ssr
 
 # Python
 __pycache__/
-*.pkl
 
 # Node/Vite
 node_modules/

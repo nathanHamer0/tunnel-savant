@@ -196,8 +196,10 @@ function regen(searchString, regenHtml, setState, setSearchFound) {
     return;
   }
 
+  const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:5001"; // AI-GEN
   fetch(
-    "http://localhost:5001/api/player/" +
+    API_URL +
+      "/api/player/" +
       encodeURIComponent(
         standardToCsvNaming(searchString, setState, setSearchFound)
       ) +

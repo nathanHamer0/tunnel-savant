@@ -1,0 +1,23 @@
+# AI-GEN
+services:
+  - type: web
+    name: tunnel-savant-api
+    runtime: python
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: gunicorn --chdir backend --workers 1 app:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.3 # match your local version
+      - key: FRONTEND_ORIGIN
+        value: https://tunnel-savant.onrender.com
+
+  - type: web
+    name: tunnel-savant
+    runtime: static
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: NODE_VERSION
+        value: 22
+      - key: VITE_API_URL
+        value: https://tunnel-savant-api.onrender.com
