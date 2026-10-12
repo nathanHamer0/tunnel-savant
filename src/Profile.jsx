@@ -30,6 +30,7 @@ import TB from "./assets/logos/TB.png";
 import TEX from "./assets/logos/TEX.png";
 import TOR from "./assets/logos/TOR.png";
 import WSH from "./assets/logos/WSH.png";
+import { standardToCsvNaming } from "./nameUtils.js";
 
 import Card from "./Card.jsx";
 const LOGOS = {
@@ -66,36 +67,6 @@ const LOGOS = {
 };
 
 /**
- * Translates searched name (in standard format) to the CSV naming format and returns the result.
- *
- * @param {String} standardName - Full name in standard form "first_name last_name".
- * @param {Function} setState - Setter function used to mediate appplication-wide component visibility.
- * @param {Function} setSearchFound - Setter function used mediate SearchNotFound component (i.e., an error message) visibility.
- * @returns {String} Full name in capitalized CSV form "last_name, first_name".
- */
-function standardToCsvNaming(standardName, setState, setSearchFound) {
-  if (!(standardName.includes("Enter") && standardName.includes(" "))) {
-    return;
-  }
-
-  // Trim "Enter" key
-  standardName = standardName.slice(0, -1 * "Enter".length);
-
-  // Traverse to space delimiter
-  let ch = 0;
-  while (standardName[ch] != " ") {
-    ch++;
-  }
-
-  // Partition at space delimiter
-  // Capitalize partitions
-  const firstName = standardName[0].toUpperCase() + standardName.slice(1, ch);
-  const lastName =
-    standardName[ch + 1].toUpperCase() + standardName.slice(ch + 2);
-  return lastName + ", " + firstName;
-}
-
-/**
  * Generates HTML for a newly-apiData-specified Profile component and calls for its (re)rendering.
  *
  * @param {Object} data - Profile-specifying apiData.
@@ -103,7 +74,8 @@ function standardToCsvNaming(standardName, setState, setSearchFound) {
  * @param {Function} onBackButton - Sequence of (re)render actions to be carried out upon a click of a Profile component's back-button.
  * @param {Function} setState - Setter function used to mediate appplication-wide component visibility.
  * @param {Function} setSearchFound - Setter function used mediate SearchNotFound component (i.e., an error message) visibility.
- * @param {Function} setSearchString - Setter function used to build (or reset) the accumulating search string.
+ * @param {Function} setSearchString - Setter function used to build or (re)set the accumulating search string.
+ * @param {String} searchString - Completed search string.
  */
 function genProfile(
   data,
@@ -111,7 +83,8 @@ function genProfile(
   onBackButton,
   setState,
   setSearchFound,
-  setSearchString
+  setSearchString,
+  searchString
 ) {
   // Upon initial app render
   if (!data) {
@@ -121,9 +94,9 @@ function genProfile(
   // Relay verdict on success of API database search
   if (data == "PlayerNotFound") {
     try {
-      throw new Error("InvalidInputException");
+      throw new Error("PlayerNotFoundException");
     } catch (error) {
-      console.log(error.message);
+      console.log(error.message + ": " + searchString);
       setSearchFound(false);
       setState(0);
       setSearchString("");
@@ -185,12 +158,10 @@ function genProfile(
  * Conducts regeneration of Profile component from fetching the searched-for apiData to feeding it to the Profile HTML
  * generator genProfile() via regenHtml().
  *
- * @param {String} searchString - Profile-specifying apiData.
+ * @param {String} searchString - Specifies profile for which API needs to fetch data for.
  * @param {Function} regenHtml - Harnesses and feeds fetched apiData to the Profile HTML generator genProfile().
- * @param {Function} setState - Setter function used to mediate appplication-wide component visibility.
- * @param {Function} setSearchFound - Setter function used mediate SearchNotFound component (i.e., an error message) visibility.
  */
-function regen(searchString, regenHtml, setState, setSearchFound) {
+function regen(searchString, regenHtml) {
   // Upon initial app render
   if (!searchString) {
     return;
@@ -200,13 +171,11 @@ function regen(searchString, regenHtml, setState, setSearchFound) {
   fetch(
     API_URL +
       "/api/player/" +
-      encodeURIComponent(
-        standardToCsvNaming(searchString, setState, setSearchFound)
-      ) +
+      encodeURIComponent(standardToCsvNaming(searchString)) +
       "/data" // http://localhost:5001/api/player/Gausman%2C%20Kevin/data
   )
     .then((res) => res.json()) // res.json() parses response body as JSON
-    .then((data) => regenHtml(data)); // Retrieves the JSON data
+    .then((data) => regenHtml(data)); // Retrieves the parsed JSON data
 }
 
 function Profile({
@@ -223,21 +192,17 @@ function Profile({
     setSearchString("");
     setState(0);
   };
-  const fetchThenRegen = () =>
-    regen(
-      searchString,
-      (apiData) =>
-        genProfile(
-          apiData,
-          setHtml,
-          onBackButton,
-          setState,
-          setSearchFound,
-          setSearchString
-        ),
+  const feeder = (apiData) =>
+    genProfile(
+      apiData,
+      setHtml,
+      onBackButton,
       setState,
-      setSearchFound
+      setSearchFound,
+      setSearchString,
+      searchString
     );
+  const fetchThenRegen = () => regen(searchString, feeder);
 
   // When the state has changed to 1, presumably, a search has been made, and so, its time to fetch the searched-for data (via regen()) and generate the new profile (via genProfile()) w/ fetchThenRegen()
   useEffect(() => (state == 1 ? fetchThenRegen() : undefined), [state]);

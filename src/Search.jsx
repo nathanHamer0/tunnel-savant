@@ -2,33 +2,63 @@ import { useEffect, useState } from "react";
 import "./Search.css";
 import SearchNotFound from "./SearchNotFound.jsx";
 import tunnelingGraphic from "./assets/tunnelingGraphic.png";
+import { csvToStandardNaming } from "./nameUtils.js";
 
 /**
- * Processes given keyboard event.
+ * Fetches list of player names, formats them, and then sets them to the concerned render variable.
  *
- * @param {KeyboardEvent} keyboardEvent - Pressed key retrievable via .key attribute.
- * @param {String} searchString - accumulating search string conducted by user input.
- * @param {Function} setSearchString - Setter function used to build the accumulating search string.
+ * @param {Function} setPlayerNames - Setter function used to set player names list.
+ */
+function fetchAndSetPlayerNames(setPlayerNames) {
+  const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:5001"; // AI-GEN
+  fetch(API_URL + "/api/players")
+    .then((res) => res.json())
+    .then((data) =>
+      setPlayerNames(data.map((name) => csvToStandardNaming(name)))
+    );
+}
+
+/**
+ * Filters down list of player names to those containing the accumulating search string as a substring and then maps the result into a correspondence of event-responsive (re)render-triggering HTML list elements (i.e., that respond to to a click event by (re)setting the search string accordingly and (re)rendering to the search-specified Profile screen).
+ *
+ * @param {Boolean} dropdownVisibility - dropdown element visibility flag.
+ * @param {Array} playerNames - Contains all player names.
+ * @param {String} searchString - Accumulating search string of user input.
+ * @param {Function} setSearchString - Setter function used to build or (re)set the accumulating search string.
+ * @param {Function} setDropdownVisibility - Setter function used to mediate dropdown element visibility.
  * @param {Function} setState - Setter function used to mediate appplication-wide component visibility.
  */
-function processkeyboardEvent(
-  keyboardEvent,
+function genDropdown(
+  dropdownVisibility,
+  playerNames,
   searchString,
   setSearchString,
+  setDropdownVisibility,
   setState
 ) {
-  if (keyboardEvent.key == "Backspace") {
-    setSearchString(searchString.slice(0, -1));
+  return dropdownVisibility
+    ? playerNames
 
-    // Ignore capitalizing shifts
-  } else if (keyboardEvent.key != "Shift") {
-    setSearchString(searchString + keyboardEvent.key);
+        // Reduce dropdown list to those potential elements (names) specified by the search substring
+        .filter((name) =>
+          name.toLowerCase().includes(searchString.toLowerCase())
+        )
 
-    // Advance to Profile state upon search completion (re-render)
-    if (keyboardEvent.key == "Enter") {
-      setState(1);
-    }
-  }
+        // Map potential elements (names) into list of HTML list elements that, upon selection, trigger a (re)render to the selection-specified profile screen
+        .map((name) => (
+          <li
+            key={name}
+            style={{ zIndex: 1, backgroundColor: "black" }}
+            onMouseDown={() => {
+              setSearchString(name);
+              setDropdownVisibility(false);
+              setState(1);
+            }}
+          >
+            {name}
+          </li>
+        ))
+    : null;
 }
 
 function Search({
@@ -38,6 +68,16 @@ function Search({
   setSearchString,
   searchFound,
 }) {
+  const [playerNames, setPlayerNames] = useState([]);
+  const [dropdownVisibility, setDropdownVisibility] = useState(false);
+
+  // Retrieve list of player names upon app-page (re)render (denoted by state change) and map them as HTML options
+  useEffect(() => fetchAndSetPlayerNames(setPlayerNames), [state]);
+
+  const onEnterKey = () => {
+    setDropdownVisibility(false);
+    setState(1);
+  };
   return (
     state == 0 && (
       <>
@@ -77,20 +117,32 @@ function Search({
                   type pairing in their arsenal.
                 </p>
                 <h3>Pitcher Tunnel Usage Search</h3>
-                <input
-                  className="search bottom right bar"
-                  id="home"
-                  type="text"
-                  placeholder="Search player name"
-                  onKeyDown={(keyboardEvent) =>
-                    processkeyboardEvent(
-                      keyboardEvent,
+                <div className="search bottom right bar container">
+                  <input
+                    className="search bottom right bar"
+                    type="text"
+                    placeholder="Search player name"
+                    value={searchString}
+                    // Upon change in the HTML content of this element, take the related event, get the targeted HTML element of the event (this <input>), and retrieve its HTML content (what the user typed)
+                    onChange={(e) => setSearchString(e.target.value)}
+                    // Upon a key press event, get the pressed key of this event and (re)set visibility state if it is an "Enter" flag (suggesting input is complete)
+                    onKeyDown={(e) =>
+                      e.key == "Enter" ? onEnterKey() : undefined
+                    }
+                    onFocus={() => setDropdownVisibility(true)}
+                    onBlur={() => setDropdownVisibility(false)}
+                  ></input>
+                  <ul className="search bottom right dropdown">
+                    {genDropdown(
+                      dropdownVisibility,
+                      playerNames,
                       searchString,
                       setSearchString,
+                      setDropdownVisibility,
                       setState
-                    )
-                  }
-                ></input>
+                    )}
+                  </ul>
+                </div>
                 <SearchNotFound searchFound={searchFound} />
               </div>
             </div>

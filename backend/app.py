@@ -62,6 +62,11 @@ def get_all_data(player_name):
     if player_exists(player_name):
         return jsonify({"player-name": player_name, "team-name": get_team(player_name), "aggregate-tunnel-pairs": get_aggregate_tunnel_pairs(player_name), "tunnel-pairs": get_tunnel_pairs(player_name)})
     return jsonify("PlayerNotFound")
+
+@app.route("/api/players")
+def get_all_player_names():
+    """Returns list of names of all players, sorted by first-name."""
+    return jsonify(sorted(list(profiles.keys()), key=lambda x: x[x.find(",")+2:]))
  
 if __name__ == "__main__":
     app.run(debug=True, port=5001)

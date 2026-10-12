@@ -23,15 +23,32 @@
   flex-grow: 1;
 }
 
-.search.bottom.left.image {
-  height: 200px;
+.search.bottom.right.bar.container {
+  border: none;
   width: 75%;
+  height: 40%;
+  position: relative;
 }
 
 .search.bottom.right.bar {
-  aspect-ratio: 15 / 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 25%;
 }
 
-.search.bottom.right.bar#home {
+.search.bottom.right.dropdown {
+  position: absolute;
+  list-style: none;
+  overflow: auto;
+  top: 25%;
+  left: 0;
+  right: 0;
+  height: 75%;
+}
+
+.search.bottom.left.image {
+  height: 200px;
   width: 75%;
 }

@@ -6,11 +6,7 @@ function SearchNotFound({ searchFound }) {
     !searchFound && (
       <>
         <div className="SearchNotFound container">
-          <p className="SearchNotFound msg">
-            Player could not be found. Try again in "{"{"}firstname
-            {"}"}
-            {"{"}lastname{"}"}" format.
-          </p>
+          <p className="SearchNotFound msg">Player could not be found</p>
         </div>
       </>
     )
