@@ -127,6 +127,9 @@ code {
 .title {
   border: solid 2px rgb(50, 50, 50);
   border-radius: 20px;
+  /* AI-GEN */
+  box-shadow: 0 4px 6px -1px rgba(98, 101, 102, 0.8),
+    0 2px 4px -1px rgba(173, 216, 230, 0.4);
 }
 
 .title {
