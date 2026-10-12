@@ -43,6 +43,7 @@ I wanted to build a web-application to view percentalized pitcher profiles (à l
 ## Live demo
 
 - https://tunnel-savant-web.onrender.com/
+- Initial query might take up to a minute as render service takes time to wake up.
 
 ## Project Structure
 
