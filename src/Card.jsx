@@ -50,6 +50,7 @@ function createSliders(pitchTypes, tunnelPairData, arsenal) {
       const ptB = pitchTypesB[jdx];
       const reverseTunnelPair = String(ptB) + "-" + String(ptA);
       if (
+        ptA != ptB &&
         !tpScores.some(([tunnelPair, ,]) => tunnelPair == reverseTunnelPair)
       ) {
         const tunnelPair = String(ptA) + "-" + String(ptB);
