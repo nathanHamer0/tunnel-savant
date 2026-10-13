@@ -65,6 +65,27 @@ const LOGOS = {
   TOR: TOR,
   WSH: WSH,
 };
+const PITCH_TYPES_INDEX = {
+  FF: "Four-Seam Fastball",
+  SI: "Sinker",
+  FC: "Cutter",
+  CH: "Changeup",
+  FS: "Splitter",
+  FO: "Forkball",
+  SC: "Screwball",
+  CU: "Curveball",
+  KC: "Knuckle Curve",
+  CS: "Slow Curve",
+  SL: "Slider",
+  ST: "Sweeper",
+  SV: "Slurve",
+  KN: "Knuckleball",
+  EP: "Eephus",
+  FA: "Other Fastball",
+  IN: "Intentional Ball",
+  PO: "Pitchout",
+  UN: "Unknown",
+};
 
 /**
  * Generates HTML for a newly-apiData-specified Profile component and calls for its (re)rendering.
@@ -86,6 +107,13 @@ function genProfile(
   setSearchString,
   searchString
 ) {
+  const createArsenalList = (arsenal) =>
+    arsenal.map((pitchType) => (
+      <li key={pitchType}>
+        {pitchType}: {PITCH_TYPES_INDEX[pitchType]}
+      </li>
+    ));
+
   // Upon initial app render
   if (!data) {
     return;
@@ -108,6 +136,7 @@ function genProfile(
   // Express fetched API data in HTML
   const playerName = data["player-name"];
   const teamName = data["team-name"];
+  const arsenal = data["arsenal"];
   const aggregateTunnelPairData = data["aggregate-tunnel-pairs"];
   const tunnelPairData = data["tunnel-pairs"];
   setHtml(
@@ -118,35 +147,51 @@ function genProfile(
             Back to Search
           </button>
           <h2 className="profile title">
-            {playerName} | {teamName}
+            MLB | 2026 (Pre-Trade-Deadline) | Tunneling Profile
           </h2>
         </section>
         <section className="profile bottom">
-          <img src={LOGOS[teamName]}></img>
+          <div className="profile bottom description container" id="parent">
+            <h3>
+              {playerName} | {teamName}
+            </h3>
+            <div className="profile bottom bottom-bottom description container">
+              <img src={LOGOS[teamName]}></img>
+              <div className="profile bottom bottom-bottom description arsenal container">
+                <h3>Arsenal Legend</h3>
+                <ul>{createArsenalList(arsenal)}</ul>
+              </div>
+            </div>
+          </div>
           <Card
             tunnelClass={"A"}
             aggregateTunnelPairData={aggregateTunnelPairData}
             tunnelPairData={tunnelPairData}
+            arsenal={arsenal}
           />
           <Card
             tunnelClass={"F-F"}
             aggregateTunnelPairData={aggregateTunnelPairData}
             tunnelPairData={tunnelPairData}
+            arsenal={arsenal}
           />
           <Card
             tunnelClass={"F-B"}
             aggregateTunnelPairData={aggregateTunnelPairData}
             tunnelPairData={tunnelPairData}
+            arsenal={arsenal}
           />
           <Card
             tunnelClass={"F-O"}
             aggregateTunnelPairData={aggregateTunnelPairData}
             tunnelPairData={tunnelPairData}
+            arsenal={arsenal}
           />
           <Card
             tunnelClass={"B-O"}
             aggregateTunnelPairData={aggregateTunnelPairData}
             tunnelPairData={tunnelPairData}
+            arsenal={arsenal}
           />
         </section>
       </div>

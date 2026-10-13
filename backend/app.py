@@ -37,6 +37,10 @@ def get_team(player_name):
     """Returns team of specified player."""
     return profiles[player_name]["team"]
 
+def get_arsenal(player_name):
+    """Returns arsenal of specified player."""
+    return list(profiles[player_name]["arsenal"].keys())
+
 def get_aggregate_tunnel_pairs(player_name):
     """Returns 1D aggregate tunnel pair pack for specified player. [AI-GEN]"""
     result = {}
@@ -60,7 +64,7 @@ def get_tunnel_pairs(player_name):
 def get_all_data(player_name):
     """Returns dictionary of all tunnel pair packs for specified player, along with miscellanious data (e.g., team)."""
     if player_exists(player_name):
-        return jsonify({"player-name": player_name, "team-name": get_team(player_name), "aggregate-tunnel-pairs": get_aggregate_tunnel_pairs(player_name), "tunnel-pairs": get_tunnel_pairs(player_name)})
+        return jsonify({"player-name": player_name, "team-name": get_team(player_name), "arsenal": get_arsenal(player_name), "aggregate-tunnel-pairs": get_aggregate_tunnel_pairs(player_name), "tunnel-pairs": get_tunnel_pairs(player_name)})
     return jsonify("PlayerNotFound")
 
 @app.route("/api/players")
