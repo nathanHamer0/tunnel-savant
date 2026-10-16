@@ -146,9 +146,7 @@ function genProfile(
           <button className="profile back" onClick={() => onBackButton()}>
             Back to Search
           </button>
-          <h2 className="profile title">
-            MLB | 2026 (Pre-Trade-Deadline) | Tunneling Profile
-          </h2>
+          <h2 className="profile title">MLB | 2026 | Tunneling Profile</h2>
         </section>
         <section className="profile bottom">
           <div className="profile bottom description container" id="parent">

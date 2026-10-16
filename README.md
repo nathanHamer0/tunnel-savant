@@ -62,6 +62,19 @@ backend/
 ├──── ...
 ...
 
+## Build Instructions
+
+- Specify for sample of pitch-level data in backend/source_data.py using statcast(start_dt="YYYY-MM-DD",end_dt="YYYY-MM-DD").
+
+```bash
+TunnelSavant % python backend/source_data.py
+TunnelSavant % python backend/parse_data.py
+TunnelSavant % python backend/profiler.py
+TunnelSavant % python backend/app.py
+TunnelSavant % npm run dev
+
 ## Future improvements
 
 - Build machine learning model to model pitcher deployment (tunnel) similarity
+- Complete/refine testing modules
+```

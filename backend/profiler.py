@@ -1,4 +1,5 @@
 import pandas
+import pickle
 
 BALL_DIAM = 2.9
 TUNNEL_END_Y = 23.8     # Decision point (point at which tunnel ends)
@@ -346,5 +347,12 @@ def main():
             profiles[n] = profile_player(n)
     return profiles
 
+def save():
+    """Saves/dumps the module's yielded profiles super-package into a .pkl file.
+    """
+    profiles = main()
+    with open("profiles.pkl", "wb") as f:
+        pickle.dump(profiles, f)
+
 if __name__ == "__main__":
-    main()
+    save()
