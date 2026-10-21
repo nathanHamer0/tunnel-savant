@@ -29,8 +29,9 @@ def load_pitch_data(player_name=""):
     return pitches
 
 def get_team(pitches):
-    """Returns team of player by deciphering it from the combination of the home_team, away_team, and inning_topbot entries from their most-recent 
-    pitch in their pitch data.
+    """Returns latest team of player by deciphering it from the combination of the home_team, away_team, and inning_topbot entries from a post-deadline pitch in their pitch data.
+    
+    Post-deadline latest team logic naïvely assumes player is not released and resigned post-deadline (it is quite unlikely that a qualified player finds themselves in this predicament).
 
     Args:
         pitches (DataFrame): player's pitch data, containing home_team, away_team, and inning_topbot entries.
@@ -38,11 +39,22 @@ def get_team(pitches):
     Returns:
         str: player's team.
     """
-    most_recent_pitch = pitches.iloc[0]     # df's are inherently sorted (descending) by game_date
-    if most_recent_pitch['inning_topbot'] == "Top":
-        return most_recent_pitch['home_team']
-    elif most_recent_pitch['inning_topbot'] == "Bot":
-        return most_recent_pitch['away_team']
+    
+    # Find a post-deadline pitch
+    TRADE_DEADLINE = "2026-08-03"
+    post_deadline_pitches = pitches[pitches['game_date'] > TRADE_DEADLINE]
+    if len(post_deadline_pitches) > 0:
+        sample_pitch = post_deadline_pitches.iloc[0]
+        
+    # Take any pitch if there is no pitch after deadline
+    else:
+        sample_pitch = pitches.iloc[0]   
+            
+    # Decipher team of player from sample-pitch data
+    if sample_pitch['inning_topbot'] == "Top":
+        return sample_pitch['home_team']
+    elif sample_pitch['inning_topbot'] == "Bot":
+        return sample_pitch['away_team']
 
 def get_durability(pitches):
     """Returns durability of player given their pitch data.

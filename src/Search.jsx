@@ -71,10 +71,21 @@ function Search({
   const [playerNames, setPlayerNames] = useState([]);
   const [dropdownVisibility, setDropdownVisibility] = useState(false);
 
-  // Retrieve list of player names upon app-page (re)render (denoted by state change) and map them as HTML options
-  useEffect(() => fetchAndSetPlayerNames(setPlayerNames), [state]);
+  // Retrieve list of player names upon app-page (re)render (denoted by state or search-string change) and map them as HTML options
+  useEffect(
+    () => fetchAndSetPlayerNames(setPlayerNames),
+    [state, searchString]
+  );
 
   const onEnterKey = () => {
+    // Reduce dropdown list to those potential elements (names) specified by the current search substring
+    playerNames.filter((name) =>
+      name.toLowerCase().includes(searchString.toLowerCase())
+    ).length == 1
+      ? // Dropdown consisting of one name infers deterministic selection of that name upon "Enter"
+        setSearchString(playerNames[0])
+      : undefined;
+
     setDropdownVisibility(false);
     setState(1);
   };

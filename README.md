@@ -70,11 +70,20 @@ backend/
 TunnelSavant % python backend/source_data.py
 TunnelSavant % python backend/parse_data.py
 TunnelSavant % python backend/profiler.py
+```
+
+** Move profiles.pkl into backend/ from TunnelSavant/ **
+
+```bash
 TunnelSavant % python backend/app.py
 TunnelSavant % npm run dev
+```
 
 ## Future improvements
 
 - Build machine learning model to model pitcher deployment (tunnel) similarity
 - Complete/refine testing modules
+
+```
+
 ```
