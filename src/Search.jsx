@@ -71,19 +71,18 @@ function Search({
   const [playerNames, setPlayerNames] = useState([]);
   const [dropdownVisibility, setDropdownVisibility] = useState(false);
 
-  // Retrieve list of player names upon app-page (re)render (denoted by state or search-string change) and map them as HTML options
-  useEffect(
-    () => fetchAndSetPlayerNames(setPlayerNames),
-    [state, searchString]
+  // Retrieve list of player names upon initial app-page render and map them as HTML options
+  useEffect(() => fetchAndSetPlayerNames(setPlayerNames), []);
+
+  // Reduce dropdown list to those potential elements (names) specified by the current search substring
+  const filteredPlayerNames = playerNames.filter((name) =>
+    name.toLowerCase().includes(searchString.toLowerCase())
   );
 
-  const onEnterKey = () => {
-    // Reduce dropdown list to those potential elements (names) specified by the current search substring
-    playerNames.filter((name) =>
-      name.toLowerCase().includes(searchString.toLowerCase())
-    ).length == 1
-      ? // Dropdown consisting of one name infers deterministic selection of that name upon "Enter"
-        setSearchString(playerNames[0])
+  const onEnterKey = (filteredPlayerNames) => {
+    // Dropdown consisting of one name infers deterministic selection of that name upon "Enter"
+    filteredPlayerNames.length == 1
+      ? setSearchString(filteredPlayerNames[0])
       : undefined;
 
     setDropdownVisibility(false);
@@ -138,7 +137,9 @@ function Search({
                     onChange={(e) => setSearchString(e.target.value)}
                     // Upon a key press event, get the pressed key of this event and (re)set visibility state if it is an "Enter" flag (suggesting input is complete)
                     onKeyDown={(e) =>
-                      e.key == "Enter" ? onEnterKey() : undefined
+                      e.key == "Enter"
+                        ? onEnterKey(filteredPlayerNames)
+                        : undefined
                     }
                     onFocus={() => setDropdownVisibility(true)}
                     onBlur={() => setDropdownVisibility(false)}
