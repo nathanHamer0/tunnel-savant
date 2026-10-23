@@ -93,6 +93,10 @@ function Search({
       <>
         <div className="search viewport container">
           <div className="search top container">
+            <p className="search top disclaimer">
+              ATTENTION: service may take a couple minutes to wake up if it has
+              been sleeping!
+            </p>
             <h1>Tunnel Savant</h1>
           </div>
           <div className="search bottom container" id="parent">

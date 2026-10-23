@@ -3,6 +3,15 @@
   flex-direction: column;
 }
 
+.search.top.container {
+  display: grid;
+  grid-template-columns: 1fr 6fr;
+}
+
+.search.top.disclaimer {
+  color: red;
+}
+
 .search.bottom.container#parent {
   display: grid;
   grid-template-columns: 1fr 1fr;
