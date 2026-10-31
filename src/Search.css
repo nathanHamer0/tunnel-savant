@@ -3,12 +3,8 @@
   flex-direction: column;
 }
 
-.search.top.container {
-  display: grid;
-  grid-template-columns: 1fr 6fr;
-}
-
 .search.top.disclaimer {
+  position: absolute;
   color: red;
 }
 
