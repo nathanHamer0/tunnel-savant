@@ -22,7 +22,7 @@ Tunnel Savant defines a tunnel as follows:
 
 ## Motivation
 
-I wanted to build a web-application to view percentalized pitcher profiles (à la Baseball Savant, mlbpitchprofiler.com), but in terms of tunnel-metrics (i.e., the "how") rather than performance-metrics (i.e., the "what").
+I wanted to build a web-application to view percentalized pitcher profiles (à la [Baseball Savant](https://baseballsavant.mlb.com/) and [MLB Pitch Profiler](https://mlbpitchprofiler.com/)), but in terms of tunnel-metrics (i.e., the "how") rather than performance-metrics (i.e., the "what").
 
 ## Tech stack
 
