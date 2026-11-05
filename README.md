@@ -1,22 +1,28 @@
-# Deployment (Tunnel) Savant
+# Tunnel Savant
 
-A baseball pitcher deployment analyzer inspired by Baseball Savant and mlbpitchprofiler.com.
+A baseball pitcher tunnel analyzer inspired by Baseball Savant and mlbpitchprofiler.com.
 
 ## Functionality
 
-Deployment (Tunnel) Savant evaluates a pitcher's deployment tendencies using:
+Tunnel Savant evaluates a pitcher's tunnel tendencies using:
 
 - Pitch-tunneling frequencies (ABtunnel%)
-- Pitch-location frequencies (Azone%) [COMING-SOON]
-- Other characteristics (e.g., arm-angle)
+- Pitch-tunneling percentiles (derived from frequencies and relative to rest of league)
 
 It outputs:
 
-- Normalized (percentalized) deployment tendencies
+- Normalized (percentalized) tunnel tendencies
+
+## Methodology
+
+Tunnel Savant defines a tunnel as follows:
+
+- From a, v, d, t parameters
+- Models pitch-tunneling by detecting pitch-pairs' (shared) paths across several calculated trajectory pings up until batter decision-point
 
 ## Motivation
 
-I wanted to build a web-application to view percentalized pitcher profiles (à la Baseball Savant, mlbpitchprofiler.com), but in terms of deployment-metrics (i.e., the "how") rather than performance-metrics (i.e., the "what").
+I wanted to build a web-application to view percentalized pitcher profiles (à la Baseball Savant, mlbpitchprofiler.com), but in terms of tunnel-metrics (i.e., the "how") rather than performance-metrics (i.e., the "what").
 
 ## Tech stack
 
@@ -53,13 +59,13 @@ backend/
 ├── profiler.py
 ├── processer.py
 ├── comparer.py
-├── static/
-├──── ...
 ├── data/
 ├──── parse_data.sql
 ├──── ...
 ├── tests/
 ├──── ...
+src/
+├── ...
 ...
 
 ## Build Instructions
@@ -81,7 +87,7 @@ TunnelSavant % npm run dev
 
 ## Future improvements
 
-- Build machine learning model to model pitcher deployment (tunnel) similarity
+- Build machine learning model to model pitcher tunnel (tunnel) similarity
 - Complete/refine testing modules
 
 ```
