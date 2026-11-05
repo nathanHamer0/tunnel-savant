@@ -87,7 +87,9 @@ TunnelSavant % npm run dev
 
 ## Future improvements
 
-- Build machine learning model to model pitcher tunnel (tunnel) similarity
+- Add other metrics to profile dashboard
+- Refine pitch-tunneling frequency logic/calculation
+- Train machine learning model to infer a pitcher's ERA from their tunneling freqeuncies
 - Complete/refine testing modules
 
 ```
