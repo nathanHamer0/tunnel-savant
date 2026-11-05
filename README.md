@@ -53,20 +53,20 @@ I wanted to build a web-application to view percentalized pitcher profiles (à l
 
 ## Project Structure
 
-backend/
-├── source_data.py
-├── parse_data.py
-├── profiler.py
-├── processer.py
-├── comparer.py
-├── data/
-├──── parse_data.sql
-├──── ...
-├── tests/
-├──── ...
-src/
-├── ...
-...
+backend/<br>
+├── source_data.py<br>
+├── parse_data.py<br>
+├── profiler.py<br>
+├── processer.py<br>
+├── comparer.py<br>
+├── data/<br>
+├──── parse_data.sql<br>
+├──── ...<br>
+├── tests/<br>
+├──── ...<br>
+src/<br>
+├── ...<br>
+...<br>
 
 ## Build Instructions
 
