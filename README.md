@@ -91,7 +91,3 @@ TunnelSavant % npm run dev
 - Refine pitch-tunneling frequency logic/calculation
 - Train machine learning model to infer a pitcher's ERA from their tunneling freqeuncies
 - Complete/refine testing modules
-
-```
-
-```
